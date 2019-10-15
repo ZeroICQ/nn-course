@@ -18,27 +18,27 @@ def source_function(x):
 def learn(x, y):
 
     model = keras.Sequential([
-        keras.layers.InputLayer(input_shape=1),
-        keras.layers.Dense(128, activation='softmax'),
+        # keras.layers.InputLayer(input_shape=1),
+        keras.layers.Dense(128, activation='softmax', input_shape=(1,)),
         keras.layers.Dense(1, activation='linear'),
     ])
     lr = 1e-2
-    epochs = 2000000
+    epochs = 20000000
     sgd = keras.optimizers.SGD(lr=lr, decay=lr/epochs, momentum=0.9, nesterov=True)
 
     model.compile(optimizer=sgd,
                   loss='mean_absolute_error',
                   metrics=['accuracy'])
-
-    mc = keras.callbacks.ModelCheckpoint('weights{epoch:08d}.h5',
-                                         save_weights_only=False, period=10000)
-    model.fit(x, y, epochs=epochs, )
+    #'./models/weights{epoch:08d}_loss{loss:.5f}.h5'
+    mc = keras.callbacks.ModelCheckpoint('./models/best_loss.h5',
+                                         save_weights_only=False, period=500,
+                                         save_best_only=True, monitor='loss')
+    model.fit(x, y, epochs=epochs, callbacks=[mc])
     test_loss, test_acc = model.evaluate(x,  y, verbose=2)
     # model.save("model"+epochs+".save")
     print('\nTest accuracy:', test_acc)
     prediction_y = model.predict(x).flatten()
     sns.lineplot(x, prediction_y, label="prediction", color="blue")
-
 
 
 def main():
