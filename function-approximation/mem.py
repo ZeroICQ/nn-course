@@ -11,7 +11,7 @@ def source_function(x):
     y1 = 1 - 0.1*x
     y2 = -0.5 + 1/(1 + math.exp(-75 - 40*x))
     y3 = -0.5 + 1/(1 + math.exp(-2*x))
-    y4 = -1 + 1/(1 + np.exp(-170 - 85*x))
+    y4 = -1 + 1/(1 + np.exp(-170 + 85*x))
     return y1 + y2 + y3 + y4
 
 
@@ -23,7 +23,7 @@ def learn(x, y):
         keras.layers.Dense(1, activation='linear'),
     ])
     lr = 1e-2
-    epochs = 20000000
+    epochs = 5000
     sgd = keras.optimizers.SGD(lr=lr, decay=lr/epochs, momentum=0.9, nesterov=True)
 
     model.compile(optimizer=sgd,
